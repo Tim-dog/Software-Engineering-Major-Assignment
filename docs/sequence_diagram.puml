@@ -1,0 +1,70 @@
+@startuml 序列图-双人对战
+' ========================================
+' 井字棋游戏 - 双人对战序列图
+' ========================================
+
+actor "玩家X" as X
+actor "玩家O" as O
+participant "GameController" as GC
+participant "BoardView" as V
+participant "Game" as G
+participant "Board" as B
+
+== 游戏初始化 ==
+GC -> G: Game(GameMode::HumanVsHuman)
+G -> G: reset()
+activate G
+deactivate G
+
+== 游戏主循环 ==
+loop 直到游戏结束
+  GC -> V: draw(game)
+  activate V
+  V -> G: getBoard()
+  V -> G: getCurrentPlayer()
+  V -> G: isGameOver()
+  V --> GC: 显示棋盘和状态
+  deactivate V
+
+  GC -> GC: handleTurn()
+
+  alt 当前玩家 == X
+    GC -> G: getHumanX()
+    G --> GC: humanX_
+    GC -> X: play(board)
+    X --> GC: 输入(row, col)
+  else 当前玩家 == O
+    GC -> G: getHumanO()
+    G --> GC: humanO_
+    GC -> O: play(board)
+    O --> GC: 输入(row, col)
+  end
+
+  GC -> G: makeMove(row, col)
+  activate G
+  G -> B: placeMark(row, col, currentPlayer_)
+  B --> G: true/false
+
+  alt 落子成功
+    G -> G: checkWinner(currentPlayer_)
+    alt 有人获胜
+      G -> G: winner_ = currentPlayer_
+      G -> G: gameOver_ = true
+    else 棋盘已满
+      G -> G: draw_ = true
+      G -> G: gameOver_ = true
+    else 继续游戏
+      G -> G: switchPlayer()
+    end
+  end
+  deactivate G
+end
+
+== 游戏结束 ==
+GC -> V: draw(game)
+activate V
+V -> G: getWinner() / isDraw()
+V --> GC: 显示结果
+deactivate V
+
+@enduml

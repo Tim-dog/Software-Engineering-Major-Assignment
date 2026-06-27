@@ -1,0 +1,114 @@
+@startuml 类图
+' ========================================
+' 井字棋游戏 - MVC 类图
+' ========================================
+
+skinparam classAttributeIconSize 0
+skinparam classFontSize 11
+
+' ========== 枚举 ==========
+enum CellState {
+  Empty
+  X
+  O
+}
+
+enum GameMode {
+  HumanVsHuman
+  HumanVsAI
+}
+
+' ========== Model 层 ==========
+class Board {
+  - grid_: array<array<CellState, 3>, 3>
+  + Board()
+  + reset(): void
+  + placeMark(row: int, col: int, mark: CellState): bool
+  + getCell(row: int, col: int): CellState
+  + isEmpty(row: int, col: int): bool
+  + isInside(row: int, col: int): bool
+  + isFull(): bool
+}
+
+abstract class Player {
+  # mark_: CellState
+  + Player(mark: CellState)
+  + getMark(): CellState
+  + {abstract} play(board: const Board&): pair<int,int>
+}
+
+class HumanPlayer {
+  + HumanPlayer(mark: CellState)
+  + play(board: const Board&): pair<int,int>
+}
+
+class AIPlayer {
+  + AIPlayer(mark: CellState)
+  + play(board: const Board&): pair<int,int>
+}
+
+class Game {
+  - mode_: GameMode
+  - board_: Board
+  - humanX_: HumanPlayer
+  - humanO_: HumanPlayer
+  - aiPlayer_: AIPlayer
+  - currentPlayer_: CellState
+  - winner_: CellState
+  - gameOver_: bool
+  - draw_: bool
+  + Game(mode: GameMode)
+  + reset(): void
+  + getBoard(): Board&
+  + getCurrentPlayer(): CellState
+  + getWinner(): CellState
+  + isGameOver(): bool
+  + isDraw(): bool
+  + getMode(): GameMode
+  + getHumanX(): HumanPlayer&
+  + getHumanO(): HumanPlayer&
+  + getAIPlayer(): AIPlayer&
+  + makeMove(row: int, col: int): bool
+  + checkWinner(mark: CellState): bool
+  + switchPlayer(): void
+}
+
+' ========== View 层 ==========
+class BoardView {
+  + draw(game: const Game&): void
+  + drawBoard(board: const Board&): void
+  + drawStatus(game: const Game&): void
+  - cellToChar(cell: CellState): char
+}
+
+' ========== Controller 层 ==========
+class GameController {
+  - game_: Game
+  - view_: BoardView
+  + GameController(mode: GameMode)
+  + run(): void
+  - handleTurn(): void
+}
+
+' ========== 关系 ==========
+Board --> CellState
+Player --> CellState
+Player <|-- HumanPlayer
+Player <|-- AIPlayer
+
+Game o-- Board
+Game o-- HumanPlayer
+Game o-- AIPlayer
+Game --> GameMode
+Game --> CellState
+
+GameController *-- Game
+GameController *-- BoardView
+
+BoardView ..> Game : <<use>>
+BoardView ..> Board : <<use>>
+
+HumanPlayer ..> Board : <<use>>
+AIPlayer ..> Board : <<use>>
+
+@enduml
