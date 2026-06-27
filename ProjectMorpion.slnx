@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="ProjectMorpion.vcxproj" Id="3d1953f1-fbc4-485d-8867-f659227f5d17" />
+</Solution>
