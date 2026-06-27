@@ -1,0 +1,23 @@
+# Visual Studio 构建输出
+.vs/
+x64/
+Debug/
+Release/
+*.suo
+*.user
+*.recipe
+*.log
+*.db
+
+# Windows 缩略图缓存
+Thumbs.db
+
+# 编译产物
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.sbr
+*.bsc
+*.idb
+*.pch
