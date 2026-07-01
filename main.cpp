@@ -1,4 +1,8 @@
-﻿#include "Config.h"
+// 井字棋游戏 (Morpion) — 软件工程大作业
+// 基于 MVC 架构的命令行井字棋，支持双人对战和人机对战
+// 作者：苏怡萌 | 班级：水电2401班 | 学号：U202411889
+
+#include "Config.h"
 #include "GameController.h"
 
 #include <iostream>
